@@ -28,7 +28,7 @@ page 50122 "PurchaseCard"{
                     ApplicationArea = All;
                     Caption = 'Contact'; //Property: Caption
                 }
-                field("Document Date"; Rec."Date")
+                field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = All;
                     Caption = 'Date';//Property: Caption
@@ -59,6 +59,11 @@ page 50122 "PurchaseCard"{
                 {
                     ApplicationArea = All;
                     Caption = 'Shipment Date'; //Property: Caption
+                }
+                field("shipment date calculate"; Rec."Shipment Date Calculation")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shipment Date Calculate'; //Property: Caption
                 }
 
             }

@@ -5,7 +5,7 @@ page 50127 "PurchaseOrderLine"
     ApplicationArea = All;
     UsageCategory = Lists;
     SourceTable = LineTable;
-    //AutoSplitKey = true;
+    AutoSplitKey = true;
 
     layout
     {
@@ -60,6 +60,29 @@ page 50127 "PurchaseOrderLine"
                 {
                     ApplicationArea = All;
                     Caption = 'Date'; //Property: Caption
+                }
+            }
+        }
+    }
+    actions{
+        area(Processing){
+            group(comments){
+                Caption = 'Line Comments';
+                action("Line Comments"){
+                    ApplicationArea = All;
+                    Caption = 'Comments';
+                    Image = Comment;
+                    ToolTip = 'View and manage comments for this purchase order line.';
+                    trigger OnAction()
+                        var
+                            commentList: Page "CommentList";
+                            commentRec: Record "CommentTable";
+                        begin
+                            commentRec.SetRange("Doc No.", Rec."Doc No.");
+                            commentRec.SetRange("Line No.", Rec."Line No.");
+                            commentList.SetTableView(commentRec);
+                            commentList.RunModal();
+                        end;
                 }
             }
         }

@@ -7,7 +7,7 @@ page 50120 "PurchaseList_Dave"
     SourceTable = "PurchaseTable";
     CardPageId = "PurchaseCard"; //Property: CardPageId
     Editable = false; //Property: Editable
-    //AutoSplitKey = true; //Property: AutoSplitKey
+    AutoSplitKey = true; //Property: AutoSplitKey
     
     layout{
         area(Content){
@@ -28,7 +28,7 @@ page 50120 "PurchaseList_Dave"
                 {
                     ApplicationArea = All;
                 }
-                field("Document Date"; Rec."Date")
+                field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = All;
                 }

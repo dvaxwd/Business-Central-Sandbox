@@ -2,7 +2,7 @@ table 50124 "LineTable"
 {
     fields
     {
-        field(1; "Doc No."; Code[20])
+        field(1; "Doc No."; Integer)
         {
             DataClassification = CustomerContent; //Property: DataClassification
             Caption = 'Document No.'; //Property: Caption
@@ -14,6 +14,7 @@ table 50124 "LineTable"
             DataClassification = CustomerContent; //Property: DataClassification
             Caption = 'Line No.'; //Property: Caption
             ToolTip = 'Unique identifier for the line item.'; //Property: ToolTip
+            AutoIncrement = true; //Property: AutoIncrement
         }
         field(3; "Item No."; Code[20])
         {
@@ -105,7 +106,7 @@ table 50124 "LineTable"
         // Call the procedure to update the total amount in the header
         UpdateTotalHeader(Rec."Doc No.");
     end;
-    local procedure UpdateTotalHeader(DocNo: Code[20])
+    local procedure UpdateTotalHeader(DocNo: Integer)
     var
         TotalAmount: Decimal;
         PurchaseOrder: Record PurchaseTable;
