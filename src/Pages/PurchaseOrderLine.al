@@ -16,6 +16,7 @@ page 50127 "PurchaseOrderLine"
                 {
                     ApplicationArea = All;
                     Caption = 'Line No.'; //Property: Caption
+                    ToolTip = 'Unique identifier for the line item in the purchase order.'; //Property: ToolTip
                 }
                 field("Item No."; Rec."Item No.")
                 {
@@ -63,24 +64,36 @@ page 50127 "PurchaseOrderLine"
             }
         }
     }
-    actions{
-        area(Processing){
-                action(Comments){
-                    ApplicationArea = All;
-                    Caption = 'Comments';
-                    Image = Comment;
-                    ToolTip = 'View and manage comments for this purchase order line.';
-                    trigger OnAction()
-                        var
-                            commentList: Page "CommentList";
-                            commentRec: Record "CommentTable";
-                        begin
-                            commentRec.SetRange("Doc No.", Rec."Doc No.");
-                            commentRec.SetRange("Line No.", Rec."Line No.");
-                            commentList.SetTableView(commentRec);
-                            commentList.RunModal();
-                        end;
-                
+    actions
+    {
+        area(Processing)
+        {
+            action(Comments)
+            {
+                ApplicationArea = All;
+                Caption = 'Comments';
+                Image = Comment;
+                ToolTip = 'View and manage comments for this purchase order line.';
+                trigger OnAction()
+                var
+                    commentList: Page "CommentList";
+                    commentRec: Record "CommentTable";
+                begin
+                    commentRec.SetRange("Doc No.", Rec."Doc No.");
+                    commentRec.SetRange("Line No.", Rec."Line No.");
+                    commentList.SetTableView(commentRec);
+                    commentList.RunModal();
+                end;
+
+            }
+            action(seletItem){
+                Caption = 'Select Item';
+                ToolTip = 'Select an item for this purchase order line.';
+                Image = NewItem;
+                trigger OnAction()
+                begin
+                    Rec.SelectMultipleItems();
+                end;
             }
         }
     }

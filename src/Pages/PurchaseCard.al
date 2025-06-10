@@ -3,13 +3,13 @@ page 50122 "PurchaseCard"{
     SourceTable = "PurchaseTable";
     UsageCategory = Tasks; //Property: UsageCategory
     Caption = 'Purchase Card';
+    AutoSplitKey = true; //Property: AutoSplitKey
     
     layout{
         area(Content){
             group(PurchaseDetails){
                 field("Doc No."; Rec."Doc No.")
                 {
-                    ApplicationArea = All;
                     Caption = 'Document No.'; //Property: Caption
                     ToolTip = 'Unique identifier for the purchase order.'; //Property: ToolTip
                 }

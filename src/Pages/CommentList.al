@@ -14,6 +14,21 @@ page 50129 CommentList
         {
             repeater(CommentList)
             {
+                field("Doc No."; Rec."Doc No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Document number associated with the comment.';
+                }
+                field("Line No."; Rec."Line No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Line number associated with the comment.';
+                }
+                field("Comment No."; Rec."Comment No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Unique identifier for the comment.';
+                }
                 field("Comment Date"; Rec."Comment Date")
                 {
                     ApplicationArea = All;
@@ -26,23 +41,6 @@ page 50129 CommentList
                 }
             }
             
-        }
-    }
-    
-    actions
-    {
-        area(Processing)
-        {
-            action(NewComment)
-            {
-                Caption = 'New Comment';
-                Image = New;
-                
-                trigger OnAction()
-                begin
-                    // Code to create a new comment
-                end;
-            }
         }
     }
 }

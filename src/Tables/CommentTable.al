@@ -19,7 +19,6 @@ table 50123 CommentTable
             DataClassification = CustomerContent;
             Caption = 'Comment No.';
             ToolTip = 'Unique identifier for the comment.';
-            AutoIncrement = true;
         }
         field(4;"Comment Date"; Date){
             DataClassification = SystemMetadata;

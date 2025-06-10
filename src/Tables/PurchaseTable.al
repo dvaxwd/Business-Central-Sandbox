@@ -8,7 +8,6 @@ table 50121 "PurchaseTable"
             DataClassification = CustomerContent; //Property: DataClassification
             Caption = 'No.'; //Property: Caption
             ToolTip = 'Unique identifier for the purchase order.'; //Property: ToolTip
-            AutoIncrement = true; //Property: AutoIncrement
         }
         field(2; "Buy-form Vendor No"; code[20])
         {
