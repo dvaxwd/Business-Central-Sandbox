@@ -106,6 +106,26 @@ table 50121 "PurchaseTable"
         }
     }
 
+    // triggers
+    trigger OnDelete()  
+        var
+            line: Record LineTable; //Variable: LineTable
+            comment: Record CommentTable; //Variable: CommentTable
+        begin
+            // Delete all lines associated with this purchase order
+            line.SetRange("Doc No.", "Doc No.");
+            if line.FindSet() then
+                repeat
+                    line.Delete();
+                until line.Next() = 0;
+            // Delete all comments associated with this purchase order
+            comment.SetRange("Doc No.", "Doc No.");
+            if comment.FindSet() then
+                repeat
+                    comment.Delete();
+                until comment.Next() = 0;
+        end;
+
     // variables
     var
         Vend: Record Vendor; //Variable: Vendor

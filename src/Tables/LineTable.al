@@ -83,6 +83,28 @@ table 50124 "LineTable"
         }
     }
 
+    //Triggers
+    trigger OnDelete()
+        var
+            comment: Record CommentTable; //Variable: CommentTable
+            PurchaseOrder: Record PurchaseTable; //Variable: PurchaseTable
+        begin
+            // Delete comments associated with this line item
+            comment.SetRange("Doc No.", Rec."Doc No."); 
+            comment.SetRange("Line No.", Rec."Line No.");
+            if comment.FindSet() then
+                repeat
+                    comment.Delete();
+                until comment.Next() = 0;
+            // Update the total amount in the purchase order header
+            PurchaseOrder.SetRange("Doc No.", Rec."Doc No.");
+            if PurchaseOrder.FindFirst() then 
+            begin
+                PurchaseOrder.Validate("Amount Calculate", PurchaseOrder."Amount Calculate" - Rec."Total Price");
+                PurchaseOrder.Modify(true);
+            end;
+        end;
+
     //Varriables
     var
         Item: Record Item; //Variable: Item

@@ -1,6 +1,5 @@
 page 50127 "PurchaseOrderLine"
 {
-    Caption = 'Purchase Order Lines';
     PageType = ListPart;
     ApplicationArea = All;
     UsageCategory = Lists;
@@ -66,9 +65,7 @@ page 50127 "PurchaseOrderLine"
     }
     actions{
         area(Processing){
-            group(comments){
-                Caption = 'Line Comments';
-                action("Line Comments"){
+                action(Comments){
                     ApplicationArea = All;
                     Caption = 'Comments';
                     Image = Comment;
@@ -83,7 +80,7 @@ page 50127 "PurchaseOrderLine"
                             commentList.SetTableView(commentRec);
                             commentList.RunModal();
                         end;
-                }
+                
             }
         }
     }

@@ -67,13 +67,10 @@ page 50122 "PurchaseCard"{
                 }
 
             }
-            group(PurchaseLines){
-                part(Line; "PurchaseOrderLine")
-                {
+            part(Line; "PurchaseOrderLine"){
                     ApplicationArea = All;
                     Caption = 'Purchase Order Lines';
                     SubPageLink = "Doc No." = field("Doc No.");
-                }
             }
         }
     }
