@@ -1,4 +1,5 @@
-table 50121 "PurchaseTable"{
+table 50121 "PurchaseTable"
+{
     Caption = 'Dave Purchase Table';
     fields
     {
@@ -68,7 +69,8 @@ table 50121 "PurchaseTable"{
             Caption = 'Address';
             ToolTip = 'Address associated with the purchase order.';
         }
-        field(11; "Address 2"; Text[250]){
+        field(11; "Address 2"; Text[250])
+        {
             Caption = 'Address 2';
         }
         field(12; "Shipment Date"; Date)
@@ -97,7 +99,8 @@ table 50121 "PurchaseTable"{
                 UpdateshipmentDate("Doc No.");
             end;
         }
-        field(14; "Vat Registration No."; Code[20]){
+        field(14; "Vat Registration No."; Code[20])
+        {
             Caption = 'Vat Registration No.';
             FieldClass = FlowField;
             CalcFormula = Lookup(Vendor."VAT Registration No." where("No." = field("Buy-form Vendor No")));
@@ -115,23 +118,23 @@ table 50121 "PurchaseTable"{
 
     // Trigger of PurchaseTable
     trigger OnDelete()
-        var
-            line: Record LineTable;
-            comment: Record CommentTable;
-        begin
-            // Delete all lines associated with this purchase order
-            line.SetRange("Doc No.", "Doc No.");
-            if line.FindSet() then
-                repeat
-                    line.Delete();
-                until line.Next() = 0;
-            // Delete all comments associated with this purchase order
-            comment.SetRange("Doc No.", "Doc No.");
-            if comment.FindSet() then
-                repeat
-                    comment.Delete();
-                until comment.Next() = 0;
-        end;
+    var
+        line: Record LineTable;
+        comment: Record CommentTable;
+    begin
+        // Delete all lines associated with this purchase order
+        line.SetRange("Doc No.", "Doc No.");
+        if line.FindSet() then
+            repeat
+                line.Delete();
+            until line.Next() = 0;
+        // Delete all comments associated with this purchase order
+        comment.SetRange("Doc No.", "Doc No.");
+        if comment.FindSet() then
+            repeat
+                comment.Delete();
+            until comment.Next() = 0;
+    end;
 
     // Variables
     var
@@ -147,39 +150,38 @@ table 50121 "PurchaseTable"{
         "Vendor Shipment No." := Vend."Shipping Agent Code";
         "Address" := Vend.Address;
         "Address 2" := Vend."Address 2";
-        "Vendor Phone No." := Vend."Phone No.";
     end;
     // Function to update shipment date in line table
     local procedure UpdateshipmentDate(docNo: Integer)
-        var
-            line: Record "LineTable";
-        begin
-            line.SetRange("Doc No.", docNo);
-            if line.FindSet() then
-                repeat
-                    line."Date" := "Shipment Date";
-                    line.Modify(true);
-                until line.Next() = 0;
-        end;
+    var
+        line: Record "LineTable";
+    begin
+        line.SetRange("Doc No.", docNo);
+        if line.FindSet() then
+            repeat
+                line."Date" := "Shipment Date";
+                line.Modify(true);
+            until line.Next() = 0;
+    end;
     // Function to update total in Header
     procedure UpdateTotalHeader(DocNo: Integer)
-        var
-            TotalAmount: Decimal;
-            Line: Record LineTable;
-        begin
-            TotalAmount := 0;
-            Line.SetRange("Doc No.", Rec."Doc No.");
-            if Line.FindSet() then
-                repeat
-                    TotalAmount += Line."Total Price";
-                until Line.Next() = 0;
-            Rec."Amount Calculate" := TotalAmount;
-            Rec.Modify();
-        end;
+    var
+        TotalAmount: Decimal;
+        Line: Record LineTable;
+    begin
+        TotalAmount := 0;
+        Line.SetRange("Doc No.", Rec."Doc No.");
+        if Line.FindSet() then
+            repeat
+                TotalAmount += Line."Total Price";
+            until Line.Next() = 0;
+        Rec."Amount Calculate" := TotalAmount;
+        Rec.Modify();
+    end;
     // Funtion to calculate document date to shipment date
     local procedure ShipmentDateCalculation(DateFormul: DateFormula; ShipmentDate: Date)
-        begin
-            Rec."Shipment Date" := CalcDate(DateFormul, ShipmentDate);
-            Rec.Modify(true);
-        end;
+    begin
+        Rec."Shipment Date" := CalcDate(DateFormul, ShipmentDate);
+        Rec.Modify(true);
+    end;
 }
