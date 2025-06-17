@@ -1,5 +1,4 @@
-table 50121 "PurchaseTable"
-{
+table 50121 "PurchaseTable"{
     Caption = 'Dave Purchase Table';
     fields
     {

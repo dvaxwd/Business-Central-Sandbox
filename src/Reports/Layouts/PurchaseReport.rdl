@@ -2149,9 +2149,6 @@ End Function
         <Field Name="Address">
           <DataField>Address</DataField>
         </Field>
-        <Field Name="VendShipNo">
-          <DataField>VendShipNo</DataField>
-        </Field>
         <Field Name="Status">
           <DataField>Status</DataField>
         </Field>
@@ -2163,9 +2160,6 @@ End Function
         </Field>
         <Field Name="VatRegistrationNo">
           <DataField>VatRegistrationNo</DataField>
-        </Field>
-        <Field Name="VendPhoneNo">
-          <DataField>VendPhoneNo</DataField>
         </Field>
         <Field Name="VatNOCluster1">
           <DataField>VatNOCluster1</DataField>

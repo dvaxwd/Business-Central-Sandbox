@@ -26,7 +26,6 @@ report 50131 "PurchaseReport"
                 column("Contact"; "PurchaseTable"."Contact") { }
                 column("DocDate"; "PurchaseTable"."Document Date") { }
                 column("Address"; "PurchaseTable".Address) { }
-                column("VendShipNo"; "PurchaseTable"."Vendor Shipment No.") { }
                 column("Status"; "PurchaseTable"."Status") { }
                 column("Amount"; "PurchaseTable"."Amount Calculate") { }
                 column("VatRegistrationNo"; "Vat Registration No.") { }
