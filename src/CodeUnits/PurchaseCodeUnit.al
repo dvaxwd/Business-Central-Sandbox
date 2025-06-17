@@ -1,35 +1,87 @@
-// codeunit 50123 PurchaseCodeunit
-// {
-//     trigger OnRun()
-//     var
-//         myInt: Integer;
-//         Purchase: Record "PurchaseTable";
-//     begin
-//         if Purchase.IsEmpty() then
-//             Message('No purchase orders found.')
-//     end;
-    
-//     //functions to insert default orders
-//     procedure InsertDefaultOrder()
-//         begin
-//             InsertOrder('PO-001', 'Vendor A', 'Contact A', '1000', '2000', 'Open');
-//             InsertOrder('PO-002', 'Vendor B', 'Contact B', '1500', '2500', 'Closed');
-//             InsertOrder('PO-003', 'Vendor C', 'Contact C', '2000', '3000', 'Pending');
-//         end;
+codeunit 50134 PurchaseCodeUnit
+{
+    TableNo = LineTable;
 
-//     //function to insert a new order
-//     procedure InsertOrder(No: Code[12]; VendorName: Text[250]; Contact: Text[250]; VendorInvoiceNo: Code[20]; VendorShipmentNo: Code[20]; Status: Text[250])
-//         var
-//             Purchase: Record "PurchaseTable";
-//         begin
-//             Purchase.Init();
-//             Purchase."NO." := 'PO-001';
-//             Purchase."Vendor Name" := VendorName;
-//             Purchase."Contact" := Contact;
-//             Purchase."Vendor Invoice No." := VendorInvoiceNo;
-//             Purchase."Vendor Shipment No." := VendorShipmentNo;
-//             Purchase."Status" := Status;
-//             Purchase.Insert();
-//         end;
-    
-// }
+    var
+        // ***** Record *****
+        PurchHeader: Record PurchaseTable;
+        PurchLineTarget: Record LineTable;
+        FromBOMComp: Record "BOM Component";
+        Item: Record Item;
+        // ***** Integer *****
+        NoOfBOMComp: Integer;
+        NextLineNo: Integer;
+        Selection: Integer;
+        LineSpacing: Integer;
+        // ***** Message *****
+        Text001: Label 'Item %1 is not a BOM.';
+        Text003: Label 'There is not enough space to explode the BOM.';
+        Text005: Label '&Copy dimensions from BOM,&Retrieve dimensions from components';
+
+    trigger OnRun()
+    begin
+        FromBOMComp.SetRange("Parent Item No.", Rec."Item No."); //setRange to fine ItemNo in table "bom component"
+        NoOfBOMComp := FromBOMComp.Count(); //count amount of component
+        if NoOfBOMComp = 0 then
+            Error(Text001, Rec."Item No.");
+        Selection := GetSelection(Rec);
+        if Selection = 0 then
+            exit;
+        InitParentItemLine(Rec);
+        Rec.Delete();
+        ExplodeBOMCompLines(Rec);
+    end;
+
+    // Procedure
+    local procedure GetSelection(PurchLine: Record LineTable) Result: Integer
+    begin
+        Result := StrMenu(Text005, 2);
+    end;
+
+    local procedure InitParentItemLine(FormPurchLine: Record LineTable)
+    begin
+        PurchLineTarget := FormPurchLine;
+        PurchLineTarget.Init();
+        PurchLineTarget.Description := FormPurchLine.Description;
+    end;
+
+    local procedure ExplodeBOMCompLines(PurchLine: Record LineTable)
+    var
+        InsertLineBetween: Boolean;
+        SkipComponent: Boolean;
+    begin
+        PurchLineTarget.Reset();
+        PurchLineTarget.SetRange("Doc No.", PurchLine."Doc No.");
+        NextLineNo := PurchLine."Line No.";
+        InsertLineBetween := false;
+        PurchLineTarget.SetFilter("Line No.", '>%1', PurchLine."Line No.");
+        if PurchLineTarget.FindLast() then begin
+            InsertLineBetween := true;
+        end;
+        if InsertLineBetween then
+            LineSpacing := (PurchLineTarget."Line No." - NextLineNo) div (1 + NoOfBOMComp)
+        else
+            LineSpacing := 10000;
+        if LineSpacing = 0 then Error(Text003);
+
+        FromBOMComp.Find('-');
+        repeat
+            case FromBOMComp.Type of
+                FromBOMComp.Type::Item:
+                    begin
+                        PurchLineTarget.Init();
+                        PurchLineTarget."Doc No." := PurchLine."Doc No.";
+                        NextLineNo := NextLineNo + LineSpacing;
+                        PurchLineTarget."Line No." := NextLineNo;
+                        Item.Get(FromBOMComp."No.");
+                        PurchLineTarget.Type := PurchLineTarget.Type::Item;
+                        PurchLineTarget.Validate("Item No.", FromBOMComp."No.");
+                        PurchLineTarget.Validate("UOM", FromBOMComp."Unit of Measure Code");
+                        PurchLineTarget.Quantity := FromBOMComp."Quantity per" * PurchLine.Quantity;
+                        PurchLineTarget."Total Price" := PurchLineTarget.Quantity * PurchLineTarget.Price;
+                        PurchLineTarget.Insert();
+                    end;
+            end;
+        until FromBOMComp.Next() = 0;
+    end;
+}

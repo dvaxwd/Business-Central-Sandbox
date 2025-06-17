@@ -1,3 +1,6 @@
+/// <summary>
+/// Page PurchaseList_Dave (ID 50120).
+/// </summary>
 page 50120 "PurchaseList_Dave"
 {
     PageType = List;
@@ -51,6 +54,23 @@ page 50120 "PurchaseList_Dave"
                     Caption = 'Total Amount Cal'; //Property: Caption
                     ToolTip = 'Total amount calculated for the purchase order.'; //Property: ToolTip
                 }
+            }
+        }
+    }
+    actions{
+        area(Processing){
+            action(Sumary){
+                Caption = 'Sumary Report';
+                Image = Report;
+                Promoted = true;
+                PromotedCategory = Process;
+                ApplicationArea = All;
+                trigger OnAction()
+                    var
+                        SumaryReport: Report SumaryReport;
+                    begin
+                        SumaryReport.RunModal();
+                    end;
             }
         }
     }

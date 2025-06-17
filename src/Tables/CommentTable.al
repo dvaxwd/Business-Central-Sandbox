@@ -1,3 +1,6 @@
+/// <summary>
+/// Table CommentTable (ID 50123).
+/// </summary>
 table 50123 CommentTable
 {
     DataClassification = CustomerContent;

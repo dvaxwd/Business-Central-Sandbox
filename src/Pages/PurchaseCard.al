@@ -1,13 +1,21 @@
-page 50122 "PurchaseCard"{
+/// <summary>
+/// Page PurchaseCard (ID 50122).
+/// </summary>
+page 50122 "PurchaseCard"
+{
     PageType = Card;
     SourceTable = "PurchaseTable";
     UsageCategory = Tasks; //Property: UsageCategory
     Caption = 'Purchase Card';
     AutoSplitKey = true; //Property: AutoSplitKey
-    
-    layout{
-        area(Content){
-            group(PurchaseDetails){
+
+    layout
+    {
+        area(Content)
+        {
+            group(PurchaseDetails)
+            {
+                Caption = 'General';
                 field("Doc No."; Rec."Doc No.")
                 {
                     Caption = 'Document No.'; //Property: Caption
@@ -23,26 +31,36 @@ page 50122 "PurchaseCard"{
                     ApplicationArea = All;
                     Caption = 'Vendor Name'; //Property: Caption
                 }
-                field("Contract"; Rec."Contact")
+                group("Buy-from")
                 {
-                    ApplicationArea = All;
-                    Caption = 'Contact'; //Property: Caption
+                    Caption = 'Buy-from';
+                    field("Address"; Rec."Address")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Address'; //Property: Caption
+                    }
+                    field("Address 2"; Rec."Address 2")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Address 2';
+                    }
+                    field("Contract"; Rec."Contact")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Contact'; //Property: Caption
+                    }
+                    field("Document Date"; Rec."Document Date")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Date';//Property: Caption
+                    }
+                    field("Vendor Shipment No."; Rec."Vendor Shipment No.")
+                    {
+                        ApplicationArea = All;
+                    }
                 }
-                field("Document Date"; Rec."Document Date")
+                field("Amoount Cal"; Rec."Amount Calculate")
                 {
-                    ApplicationArea = All;
-                    Caption = 'Date';//Property: Caption
-                }
-                field("Address"; Rec."Address")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Address'; //Property: Caption
-                }
-                field("Vendor Shipment No."; Rec."Vendor Shipment No.")
-                {
-                    ApplicationArea = All;
-                }
-                field("Amoount Cal"; Rec."Amount Calculate"){
                     ApplicationArea = All;
                     Caption = 'Amount Calculate'; //Property: Caption
                 }
@@ -54,6 +72,7 @@ page 50122 "PurchaseCard"{
                 field("Status"; Rec."Status")
                 {
                     ApplicationArea = All;
+                    
                 }
                 field("Shipment Date"; Rec."Shipment Date")
                 {
@@ -65,13 +84,65 @@ page 50122 "PurchaseCard"{
                     ApplicationArea = All;
                     Caption = 'Shipment Date Calculate'; //Property: Caption
                 }
-
             }
-            part(Line; "PurchaseOrderLine"){
+            part(Line; "PurchaseOrderLine")
+            {
+                ApplicationArea = All;
+                Caption = 'Purchase Order Lines';
+                SubPageLink = "Doc No." = field("Doc No.");
+            }
+        }
+
+    }
+    actions
+    {
+        area(Processing)
+        {
+            group(Print)
+            {
+                Caption = 'Print/Send';
+                Image = Print;
+                action(PrintDefault)
+                {
                     ApplicationArea = All;
-                    Caption = 'Purchase Order Lines';
-                    SubPageLink = "Doc No." = field("Doc No.");
+                    Caption = 'Purchase Order';
+                    Image = Print;
+                    Promoted = true;
+                    PromotedCategory = Process;
+                    trigger OnAction()
+                    var
+                        PurchaseRec: Record PurchaseTable;
+                        PurchaseReport: Report PurchaseReport;
+                    begin
+                        PurchaseRec.SetRange("Doc No.", Rec."Doc No.");
+                        PurchaseReport.SetTableView(PurchaseRec);//send Rec to dataItem PurchaseReport
+                        PurchaseReport.RunModal();
+                    end;
+                }
+                action(PrintGroup)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purchase Order - Group Items';
+                    Image = Print;
+                    Promoted = true;
+                    PromotedCategory = Process;
+                    trigger OnAction()
+                    var
+                        PurchaseRec: Record PurchaseTable;
+                        GroupItemReport: Report GroupItemReport;
+                    begin
+                        PurchaseRec.SetRange("Doc No.", Rec."Doc No.");
+                        GroupItemReport.SetTableView(PurchaseRec);
+                        GroupItemReport.RunModal();
+                    end;
+
+                }
             }
         }
     }
+    trigger OnAfterGetCurrRecord()
+        begin
+            Rec.UpdateTotalHeader(Rec."Doc No.");
+            CurrPage.Update(true);
+        end;
 }

@@ -1,13 +1,13 @@
-enum 50125 PerchaseOrderEnum
+enum 50125 PurchaseOrderEnum
 {
     Extensible = true;
     
     value(0; Open)
     {
-        Caption = 'Open'; //Property: Caption
+        Caption = 'Open';
     }
     value(1; Released)
     {
-        Caption = 'Released'; //Property: Caption
+        Caption = 'Released';
     }
 }

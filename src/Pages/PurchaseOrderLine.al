@@ -1,3 +1,6 @@
+/// <summary>
+/// Page PurchaseOrderLine (ID 50127).
+/// </summary>
 page 50127 "PurchaseOrderLine"
 {
     PageType = ListPart;
@@ -12,11 +15,9 @@ page 50127 "PurchaseOrderLine"
         {
             repeater(OrderLines)
             {
-                field("Line No."; Rec."Line No.")
+                field(Type; Rec.Type)
                 {
-                    ApplicationArea = All;
-                    Caption = 'Line No.'; //Property: Caption
-                    ToolTip = 'Unique identifier for the line item in the purchase order.'; //Property: ToolTip
+                    Caption = 'Type';
                 }
                 field("Item No."; Rec."Item No.")
                 {
@@ -68,25 +69,8 @@ page 50127 "PurchaseOrderLine"
     {
         area(Processing)
         {
-            action(Comments)
+            action(seletItem)
             {
-                ApplicationArea = All;
-                Caption = 'Comments';
-                Image = Comment;
-                ToolTip = 'View and manage comments for this purchase order line.';
-                trigger OnAction()
-                var
-                    commentList: Page "CommentList";
-                    commentRec: Record "CommentTable";
-                begin
-                    commentRec.SetRange("Doc No.", Rec."Doc No.");
-                    commentRec.SetRange("Line No.", Rec."Line No.");
-                    commentList.SetTableView(commentRec);
-                    commentList.RunModal();
-                end;
-
-            }
-            action(seletItem){
                 Caption = 'Select Item';
                 ToolTip = 'Select an item for this purchase order line.';
                 Image = NewItem;
@@ -95,6 +79,57 @@ page 50127 "PurchaseOrderLine"
                     Rec.SelectMultipleItems();
                 end;
             }
+            group(Line)
+            {
+                Caption = 'Line';
+                action(Comments)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Comments';
+                    Image = Comment;
+                    ToolTip = 'View and manage comments for this purchase order line.';
+                    trigger OnAction()
+                    var
+                        commentList: Page "CommentList";
+                        commentRec: Record "CommentTable";
+                    begin
+                        commentRec.SetRange("Doc No.", Rec."Doc No.");
+                        commentRec.SetRange("Line No.", Rec."Line No.");
+                        commentList.SetTableView(commentRec);
+                        commentList.RunModal();
+                    end;
+                }
+            }
+            group(Function)
+            {
+                Caption = 'Function';
+                Image = "Action";
+                action(ExpBOM)
+                {
+                    Caption = 'Explode BOM';
+                    Image = ExplodeBOM;
+                    ToolTip = 'Add a line for each component on the bill of materials for the selected item. For example, this is useful for selling the parent item as a kit. CAUTION: The line for the parent item will be deleted and only its description will display. To undo this action, delete the component lines and add a line for the parent item again. This action is available only for lines that contain an item.';
+                    trigger OnAction()
+                    begin
+                        ExplodeBOM();
+                    end;
+                }
+            }
+            group(Order){
+                Caption = 'Order';
+            }
         }
     }
+    // Trigger of PurchaseOrderLine
+    trigger OnAfterGetRecord()
+        begin
+            CurrPage.Update(true);
+        end;
+    var
+        DocumentTotals: Codeunit "Document Totals";
+    // Procedure
+    local procedure ExplodeBOM()
+    begin
+        CODEUNIT.Run(CODEUNIT::"PurchaseCodeUnit", Rec);
+    end;
 }

@@ -7,7 +7,7 @@ page 50129 CommentList
     SourceTable = "CommentTable";
     AutoSplitKey = true;
     Editable = true; // Allows editing of comments directly from the list
-    
+
     layout
     {
         area(Content)
@@ -18,16 +18,19 @@ page 50129 CommentList
                 {
                     ApplicationArea = All;
                     ToolTip = 'Document number associated with the comment.';
+                    Visible = false;
                 }
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Line number associated with the comment.';
+                    Visible = false;
                 }
                 field("Comment No."; Rec."Comment No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Unique identifier for the comment.';
+                    Visible = false;
                 }
                 field("Comment Date"; Rec."Comment Date")
                 {
@@ -40,7 +43,7 @@ page 50129 CommentList
                     ToolTip = 'Content of the comment.';
                 }
             }
-            
+
         }
     }
 }

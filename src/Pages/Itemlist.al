@@ -1,3 +1,6 @@
+/// <summary>
+/// Page ItemList (ID 50130).
+/// </summary>
 page 50130 ItemList
 {
     PageType = List;
