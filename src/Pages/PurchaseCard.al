@@ -90,6 +90,7 @@ page 50122 "PurchaseCard"
                 ApplicationArea = All;
                 Caption = 'Purchase Order Lines';
                 SubPageLink = "Doc No." = field("Doc No.");
+                UpdatePropagation = Both;
             }
         }
 
@@ -143,6 +144,5 @@ page 50122 "PurchaseCard"
     trigger OnAfterGetCurrRecord()
         begin
             Rec.UpdateTotalHeader(Rec."Doc No.");
-            CurrPage.Update(true);
         end;
 }

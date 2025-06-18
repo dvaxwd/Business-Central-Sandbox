@@ -74,4 +74,5 @@ page 50120 "PurchaseList_Dave"
             }
         }
     }
+
 }

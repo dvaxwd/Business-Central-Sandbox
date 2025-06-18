@@ -168,14 +168,16 @@ table 50121 "PurchaseTable"{
         TotalAmount: Decimal;
         Line: Record LineTable;
     begin
+        if DocNo = 0 then exit;
         TotalAmount := 0;
-        Line.SetRange("Doc No.", Rec."Doc No.");
+        Line.SetRange("Doc No.", DocNo);
         if Line.FindSet() then
             repeat
                 TotalAmount += Line."Total Price";
             until Line.Next() = 0;
-        Rec."Amount Calculate" := TotalAmount;
-        Rec.Modify();
+        if Rec."Amount Calculate" <> TotalAmount then
+            Rec."Amount Calculate" := TotalAmount;
+            Rec.Modify();
     end;
     // Funtion to calculate document date to shipment date
     local procedure ShipmentDateCalculation(DateFormul: DateFormula; ShipmentDate: Date)

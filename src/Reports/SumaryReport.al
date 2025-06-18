@@ -1,17 +1,11 @@
-/// <summary>
-/// Report SumaryReport (ID 50133).
-/// </summary>
-report 50133 "SumaryReport"
-{
+report 50133 "SumaryReport"{
     Caption = 'Purchase Sumary Report';
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     DefaultRenderingLayout = WithWizard;
-    dataset
-    {
+    dataset{
         // ***** PurchaseLine Data *****
-        dataitem(PurchaseLine; LineTable)
-        {
+        dataitem(PurchaseLine; LineTable){
             RequestFilterFields = "Item No.";
             column(ItemNo; "Item No.") { }
             column(Description; Description) { }
@@ -30,22 +24,17 @@ report 50133 "SumaryReport"
             end;
         }
     }
-    requestpage
-    {
-        layout
-        {
-            area(Content)
-            {
-                group(Filter)
-                {
+
+    // Requestpage of SummaryReport
+    requestpage{
+        layout{
+            area(Content){
+                group(Filter){
                     Caption = 'Find & Filter';
-                    field(StartDate; StartDate)
-                    {
+                    field(StartDate; StartDate){
                         Caption = 'Start Date';
                         ToolTip = 'Start date  to show in report';
-                    }
-                    field(EndDate; EndDate)
-                    {
+                    }field(EndDate; EndDate){
                         Caption = 'End Date';
                         ToolTip = 'End date to show in report';
                     }
@@ -54,27 +43,26 @@ report 50133 "SumaryReport"
         }
         // Trigger of requestpage
         trigger OnOpenPage()
-        begin
-            StartDate := CALCDATE('<-CY', (Today()));
-            EndDate := Today;
-        end;
+            begin
+                StartDate := CALCDATE('<-CY', (Today())); // ***** Set Start to first day of year *****
+                EndDate := Today;
+            end;
     }
-    rendering
-    {
-        layout(WithWizard)
-        {
+
+    // Rendering of SummaryReport
+    rendering{
+        layout(WithWizard){
             Type = RDLC;
             LayoutFile = './src/Reports/Layouts/SumaryWizardReport.rdl';
             Caption = 'Sumary With Wizard';
-        }
-        layout(WithoutWizard)
-        {
+        }layout(WithoutWizard){
             Type = RDLC;
             LayoutFile = './src/Reports/Layouts/SumaryReport.rdl';
             Caption = 'Sumary Without Wizard';
         }
     }
-    //Var
+
+    // Variables
     var
         StartDate: Date;
         EndDate: Date;

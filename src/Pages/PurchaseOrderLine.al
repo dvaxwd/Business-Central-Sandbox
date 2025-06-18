@@ -1,11 +1,6 @@
-/// <summary>
-/// Page PurchaseOrderLine (ID 50127).
-/// </summary>
-page 50127 "PurchaseOrderLine"
-{
+page 50127 "PurchaseOrderLine"{
     PageType = ListPart;
     ApplicationArea = All;
-    UsageCategory = Lists;
     SourceTable = LineTable;
     AutoSplitKey = true;
 
@@ -112,6 +107,7 @@ page 50127 "PurchaseOrderLine"
                     trigger OnAction()
                     begin
                         ExplodeBOM();
+                        CurrPage.Update(true);
                     end;
                 }
             }
@@ -120,11 +116,6 @@ page 50127 "PurchaseOrderLine"
             }
         }
     }
-    // Trigger of PurchaseOrderLine
-    trigger OnAfterGetRecord()
-        begin
-            CurrPage.Update(true);
-        end;
     var
         DocumentTotals: Codeunit "Document Totals";
     // Procedure
